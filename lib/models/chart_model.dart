@@ -1,5 +1,5 @@
 
-
+import 'package:Cov_id/util/util.dart';
 class ChartModel{
   var color;
   String cases;
@@ -59,9 +59,9 @@ class DataGrowth {
   DataGrowth({this.active, this.recovered, this.death, this.date});
 
   DataGrowth.fromJson(Map<String, dynamic> json) {
-    active = json['active'];
-    recovered = json['recovered'];
-    death = json['death'];
+    active = json['active'].toString().fixedDouble();
+    recovered = json['recovered'].toString().fixedDouble();
+    death = json['death'].toString().fixedDouble();
     date = json['date'];
   }
 
