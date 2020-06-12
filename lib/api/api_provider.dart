@@ -9,14 +9,19 @@ import 'package:flutter/cupertino.dart';
 class ApiProvider extends ChangeNotifier {
   int indexProv = 0;
   CoronaModel data;
+  String stat = "refresh";
   CoronaGrowth dataThisWeek;
   Dio dio = Dio();
   final urlGrowth = "https://ainxzeeebermhanxx.000webhostapp.com/api.php";
-
+  get getStat => stat;
   set setIndexProv(int index) {
     index < provinces.length ? indexProv = index : indexProv = 0;
     notifyListeners();
   }
+
+  set statset(String newStat) => stat = newStat;
+
+  void update() => notifyListeners();
 
   String get getProvinceNow => provinces[indexProv];
   get getdataGrowth => getDataGrowthAsync();
@@ -34,7 +39,7 @@ class ApiProvider extends ChangeNotifier {
       String now = getProvinceNow;
       final urlCorona =
           "https://ainxzeeebermhanxx.000webhostapp.com/apiProvinsi.php?prov=$now";
-      final response =  await dio.get(urlCorona);
+      final response = await dio.get(urlCorona);
       final jsonresponse = jsonDecode(response.data);
       return CoronaModel().fromJsonprov(jsonresponse);
     } else {
