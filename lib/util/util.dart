@@ -1,7 +1,12 @@
 
 import 'package:Cov_id/models/chart_model.dart';
 import 'package:Cov_id/models/corona_model.dart';
+import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+errindicator(void fun) => Container(
+  child: Column(children: [Text("data tidak termuat"),Text("periksa koneksi anda!"),IconButton(icon: Icon(Icons.refresh), onPressed: ()=>fun),Text("refresh")],));
+
 
 void call(String num) {
   final String phone = 'tel:$num';

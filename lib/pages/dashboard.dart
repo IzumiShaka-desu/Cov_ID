@@ -15,7 +15,8 @@ class Dashboard extends StatefulWidget {
   _DashboardState createState() => _DashboardState();
 }
 
-String area=ApiProvider().getProvinceNow;
+String area = ApiProvider().getProvinceNow;
+String stat='refresh';
 
 @override
 void initState() {}
@@ -33,41 +34,48 @@ class _DashboardState extends State<Dashboard> {
                   Icons.info_outline,
                   color: Colors.white,
                 ),
-                onPressed: () async{
-                 var dial=await showDialog(context: this.context,
-                   child: SimpleDialog(
-                     title: Container(padding: EdgeInsets.all(5), child: Text("Tentang pembuat"),),
-                     children: [
-                       Container(
-                         padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                         child: Column(
-
-                           children: [
-                             Row(children: [
-                               Text("Nama : Sesaka Aji Nursyah Bantani")
-                             ],),
-                             Row(children: [
-                               Text("Email : shakaaji29@gmail.com")
-                             ],),
-                             Row(),
-                             Row(
-                               mainAxisAlignment: MainAxisAlignment.end,
-                               children: [
-                                Container(
-                                  padding: EdgeInsets.all(25),
-                                  child:  RaisedButton(
-                                    child:Text("Close"),
-                                    onPressed: ()=>Navigator.pop(context,true)),)
-                               ],
-                             )
-                           ],
-                         ),
-                       )
-                     ],
-                     titlePadding: EdgeInsets.all(5),
-
-                   )
-                 );
+                onPressed: () async {
+                  var dial = await showDialog(
+                      context: this.context,
+                      child: SimpleDialog(
+                        title: Container(
+                          padding: EdgeInsets.all(5),
+                          child: Text("Tentang pembuat"),
+                        ),
+                        children: [
+                          Container(
+                            padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text("Nama : Sesaka Aji Nursyah Bantani")
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text("Email : shakaaji29@gmail.com")
+                                  ],
+                                ),
+                                Row(),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.all(25),
+                                      child: RaisedButton(
+                                          child: Text("Close"),
+                                          onPressed: () =>
+                                              Navigator.pop(context, true)),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                        titlePadding: EdgeInsets.all(5),
+                      ));
                 })
           ],
           elevation: 0,
@@ -199,10 +207,9 @@ class _DashboardState extends State<Dashboard> {
                               SizedBox(width: 10),
                               Consumer<ApiProvider>(
                                 builder: (context, api, _) => Expanded(
-                                  
                                     child: DropdownButton(
                                   isExpanded: true,
-                                  value: area=api.getProvinceNow,
+                                  value: area = api.getProvinceNow,
                                   underline: SizedBox(),
                                   items: provinces
                                       .map<DropdownMenuItem<String>>(
@@ -211,11 +218,10 @@ class _DashboardState extends State<Dashboard> {
                                         value: value, child: Text(value));
                                   }).toList(),
                                   onChanged: (String value) {
-                                    int index =provinces.indexOf(value);
-                                    api.setIndexProv=index;
+                                    int index = provinces.indexOf(value);
+                                    api.setIndexProv = index;
                                     setState(() {
                                       if (value != "Indonesia") area = value;
-                                      
                                     });
                                   },
                                 )),
@@ -226,9 +232,7 @@ class _DashboardState extends State<Dashboard> {
                       ]),
                 ),
                 GestureDetector(
-                  onTap: () {
-                    print("kasus");
-                  },
+                  onTap: () {},
                   child: Container(
                     padding: EdgeInsets.all(15),
                     width: double.infinity,
@@ -243,12 +247,19 @@ class _DashboardState extends State<Dashboard> {
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.w600),
                               ),
-                              Text(
-                                "",
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.blueAccent,
-                                    fontWeight: FontWeight.w400),
+                              Consumer<ApiProvider>(
+                                builder: (context, api, _) => GestureDetector(
+                                  onTap: () {
+                                    api.update();
+                                  },
+                                  child: Text(
+                                    api.getStat,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.blueAccent,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ),
                               )
                             ],
                           ),
@@ -265,12 +276,13 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () async{
-                    return await showDialog(context: context,child:
-                    AlertDialog(
-                      title :Text("Warning"),
-                      content: Text("Peta pesebaran belum tersedia"),
-                    ));
+                  onTap: () async {
+                    return await showDialog(
+                        context: context,
+                        child: AlertDialog(
+                          title: Text("Warning"),
+                          content: Text("Peta pesebaran belum tersedia"),
+                        ));
                   },
                   child: Container(
                     margin: EdgeInsets.only(top: 10),
@@ -362,100 +374,107 @@ _cardInfo(TypeCase type, ApiProvider apiProvider, Color color) {
             widget = circularProgressIndicator;
             break;
           case ConnectionState.done:
-            switch (type) {
-              case TypeCase.positif:
-                widget = Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                  ),
-                  child: Column(children: [
-                    Text(
-                      "Positif",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: color),
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          snapshot.data.nonNullPositif(),
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color: color),
-                        ),
+          apiProvider.statset="refresh";
+            if (snapshot.hasError) {
+              widget = errindicator(apiProvider.update());
+            } else if (snapshot.hasData) {
+              switch (type) {
+                case TypeCase.positif:
+                  widget = Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
                       ),
-                    )
-                  ]),
-                );
+                    ),
+                    child: Column(children: [
+                      Text(
+                        "Positif",
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: color),
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            snapshot.data.nonNullPositif(),
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: color),
+                          ),
+                        ),
+                      )
+                    ]),
+                  );
 
-                break;
-              case TypeCase.death:
-                widget = Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                  ),
-                  child: Column(children: [
-                    Text(
-                      "Meninggal",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: color),
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          snapshot.data.nonNullDeath(),
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color: color),
-                        ),
+                  break;
+                case TypeCase.death:
+                  widget = Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
                       ),
-                    )
-                  ]),
-                );
-                break;
-              case TypeCase.recover:
-                widget = Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
                     ),
-                  ),
-                  child: Column(children: [
-                    Text(
-                      "Sembuh",
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: color),
-                    ),
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          snapshot.data.nonNullRecovered(),
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color: color),
-                        ),
+                    child: Column(children: [
+                      Text(
+                        "Meninggal",
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: color),
                       ),
-                    )
-                  ]),
-                );
-                break;
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            snapshot.data.nonNullDeath(),
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: color),
+                          ),
+                        ),
+                      )
+                    ]),
+                  );
+                  break;
+                case TypeCase.recover:
+                  widget = Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
+                    child: Column(children: [
+                      Text(
+                        "Sembuh",
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: color),
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            snapshot.data.nonNullRecovered(),
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: color),
+                          ),
+                        ),
+                      )
+                    ]),
+                  );
+                  break;
+              }
+              break;
+            } else {
+              widget = errindicator(apiProvider.update());
             }
-            break;
         }
         return widget;
       });
