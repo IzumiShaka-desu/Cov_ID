@@ -22,6 +22,7 @@ class ApiProvider extends ChangeNotifier {
   get getdataGrowth => getDataGrowthAsync();
   Future<CoronaGrowth> getDataGrowthAsync() async {
     dataThisWeek = CoronaGrowth();
+     
     final response = await dio.get(urlGrowth);
     final jsonString = response.data;
     final jsonresponse = jsonDecode(jsonString);
