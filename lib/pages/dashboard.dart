@@ -253,7 +253,7 @@ class _DashboardState extends State<Dashboard> {
                                     api.update();
                                   },
                                   child: Text(
-                                    api.getStat,
+                                    "refresh",
                                     style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.blueAccent,
@@ -374,7 +374,6 @@ _cardInfo(TypeCase type, ApiProvider apiProvider, Color color) {
             widget = circularProgressIndicator;
             break;
           case ConnectionState.done:
-          apiProvider.statset="refresh";
             if (snapshot.hasError) {
               widget = errindicator(apiProvider.update());
             } else if (snapshot.hasData) {

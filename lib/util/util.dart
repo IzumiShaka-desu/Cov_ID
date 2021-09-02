@@ -16,6 +16,11 @@ void call(String num) {
     throw e;
   }
 }
+extension number on String{
+  double fixedDouble(){
+    return double.parse(double.parse(this).toStringAsFixed(3));
+  }
+}
 extension d on DataGrowth{
       int getMax(){
         List data=[this.active,this.death,this.recovered];
